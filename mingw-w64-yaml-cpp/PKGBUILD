@@ -4,7 +4,7 @@ _realname=yaml-cpp
 pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgver=0.8.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A YAML parser and emitter in C++ matching the YAML 1.2 spec (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
@@ -18,8 +18,14 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
              "${MINGW_PACKAGE_PREFIX}-cmake"
              "${MINGW_PACKAGE_PREFIX}-ninja"
              "${MINGW_PACKAGE_PREFIX}-boost")
-source=(https://github.com/jbeder/yaml-cpp/archive/${pkgver}/${_realname}-${pkgver}.tar.gz)
-sha256sums=('fbe74bbdcee21d656715688706da3c8becfd946d92cd44705cc6098bb23b3a16')
+source=(https://github.com/jbeder/yaml-cpp/archive/${pkgver}/${_realname}-${pkgver}.tar.gz
+	001-remove-build-debug-messages.patch)
+sha256sums=('fbe74bbdcee21d656715688706da3c8becfd946d92cd44705cc6098bb23b3a16'
+	    '890c1e7d4d872a92ba2de763bd56f850f1a44dd433349c4dbc36a88c28fe115b')
+
+prepare() {
+  patch -d ${_realname}-$pkgver -Np1 -i ../001-remove-build-debug-messages.patch
+}
 
 build() {
   msg2 "Build shared library"
@@ -30,6 +36,7 @@ build() {
     -G"Ninja" \
     -DCMAKE_INSTALL_PREFIX=${MINGW_PREFIX} \
     -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+    -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
     -DYAML_BUILD_SHARED_LIBS=ON \
     -DYAML_CPP_BUILD_TESTS=OFF \
     ../${_realname}-${pkgver}
@@ -42,6 +49,7 @@ build() {
   ${MINGW_PREFIX}/bin/cmake.exe \
     -G"Ninja" \
     -DCMAKE_INSTALL_PREFIX=${MINGW_PREFIX} \
+    -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
     -DYAML_BUILD_SHARED_LIBS=OFF \
     -DYAML_CPP_BUILD_TESTS=OFF \
     ../${_realname}-${pkgver}

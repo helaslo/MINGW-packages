@@ -1,0 +1,27 @@
+From 47cd2725d61e54719933b83ea51c64ad60c24066 Mon Sep 17 00:00:00 2001
+From: Orgad Shaneh <orgad.shaneh@audiocodes.com>
+Date: Tue, 27 Aug 2024 18:42:15 +0300
+Subject: [PATCH] Remove build debug messages
+
+They were commented out before 0733aeb45, but when that commit
+was reverted in 2b65c65e1 they were recovered uncommented.
+---
+ include/yaml-cpp/dll.h | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/include/yaml-cpp/dll.h b/include/yaml-cpp/dll.h
+index eabdda1d9..4e55ab8c2 100644
+--- a/include/yaml-cpp/dll.h
++++ b/include/yaml-cpp/dll.h
+@@ -15,11 +15,9 @@
+ #    ifndef YAML_CPP_API
+ #      ifdef yaml_cpp_EXPORTS
+          /* We are building this library */
+-#        pragma message( "Defining YAML_CPP_API for DLL export" )
+ #        define YAML_CPP_API __declspec(dllexport)
+ #      else
+          /* We are using this library */
+-#        pragma message( "Defining YAML_CPP_API for DLL import" )
+ #        define YAML_CPP_API __declspec(dllimport)
+ #      endif
+ #    endif
